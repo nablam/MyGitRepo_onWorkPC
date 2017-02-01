@@ -1,0 +1,77 @@
+C:\_nabdir\RaspberryPi\Scripts for picture system
+
+?? on standalone raspi
+Using username "pi".
+pi@172.16.0.6's:
+
+root@raspberrypi:/pi2sh# cat sshToPi3.sh
+############################################################################################
+#!/bin/bash
+SCP_PASSWORD="SSetone123Pashathecat1"
+
+/usr/bin/expect <<- DONE
+  set timeout 6
+
+  spawn sudo scp -P 65056 /pi2pics/auto3.jpg pi@172.16.0.26:/home/pi/pictureRepo
+
+  match_max 100000
+
+  # Look for passwod prompt
+  expect "*?assword:*"
+  # Send password aka $password
+  send -- "$SCP_PASSWORD\r"
+  # send blank line (\r) to make sure we get back to gui
+  #  send -- "\r"
+  expect eof
+DONE
+###############################################################################################
+root@raspberrypi:/pi2sh#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-rw-r--r--  1 pi  
+root@raspberrypi:/pi3sh# nano sshexp.exp
+root@raspberrypi:/pi3sh# cat sshexp.exp
+##################################################################################
+#!/usr/bin/expect
+
+set password "SSetone123"
+set timeout 20
+
+spawn ssh "pi@172.16.0.6"
+
+expect "assword:"
+
+send "$password\r";
+
+send "ls\r"
+send "cd /\r"
+send "cd /pi2pics\r"
+send "sudo bash\r"
+send "raspistill -o auto3.jpg\r"
+set timeout 10
+send "cd /pi2sh\r"
+send "./sshToPi3.sh\r"
+set timeut 10
+send "exit\r"
+send "exit\r"
+send "exit\r"
+
+interact
+####################################################################################
+root@raspberrypi:/pi3sh#
+
